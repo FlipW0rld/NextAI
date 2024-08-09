@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer"; // Import multer
 import chat from "./chat.js";
+const path = require('path');
 
 dotenv.config();
 
@@ -37,4 +38,21 @@ res.send(resp.text);
 
 app.listen(PORT, () => {
 console.log(`Server is running on port ${PORT}`);
+});
+
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, '../build')));
+
+// API routes
+app.get('/api/some-endpoint', (req, res) => {
+  res.json({ message: 'Hello from the backend!' });
+});
+
+// The "catchall" handler: for any request that doesn't match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname + '/../build/index.html'));
+});
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
